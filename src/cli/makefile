@@ -5,7 +5,7 @@
 
 # General Vars
 COMPILER=g++
-FLAGS=-Werror=vla -Wall -MMD
+FLAGS=-Werror=vla -Wall -MMD -lrt
 EXEC=mcheck
 CPPSTANDARD=c++14
 
@@ -18,7 +18,7 @@ DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 
 # Deal with common objects, common directory, and objects we need from common
 COMMON_DIR=../common
-COMMON_OBJS=Logger.o
+COMMON_OBJS=Logger.o commonMethods.o messageManager.o customExceptions.o
 COMMON_OBJS_PATHS=$(call addprefix, ${COMMON_DIR}/obj/, ${COMMON_OBJS})
 INCLUDE_PATHS=../common/src
 
@@ -50,6 +50,7 @@ compile: $(OBJECTPATHS)
 
 link: 
 	${COMPILER} -std=${CPPSTANDARD} -I $(INCLUDE_PATHS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS}
+	@echo Linking Complete
 
 clean:
 	cd ${COMMON_DIR} && $(MAKE) clean
