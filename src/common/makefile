@@ -38,6 +38,6 @@ debug: FLAGS+=-g
 debug: ${OBJECTPATHS}
 
 clean:
-	rm -f ${OBJDIR}/*.o ${OBJDIR}/*.d
+	rm ${OBJDIR}/*.o ${OBJDIR}/*.d
 
 

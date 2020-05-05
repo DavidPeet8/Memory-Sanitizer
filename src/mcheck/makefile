@@ -5,14 +5,15 @@
 
 # General Vars
 COMPILER=g++
-FLAGS=-Werror=vla -Wall -MMD -lrt
+# -ldl lib dynamic lib
+FLAGS=-Werror=vla -Wall -MMD -lrt -ldl
 EXEC=mcheck
 CPPSTANDARD=c++14
 
 # Vars for project objects
 SRCDIR=./src
 OBJDIR=./obj
-OBJECTS=main.o
+OBJECTS=memcheck_shim.o
 OBJECTPATHS=$(call addprefix, ${OBJDIR}/, ${OBJECTS})
 DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 
@@ -54,4 +55,4 @@ link:
 
 clean:
 	cd ${COMMON_DIR} && $(MAKE) clean
-	rm ${EXEC} ${OBJDIR}/*.o ${OBJDIR}/*.d
+	rm ${EXEC} ${OBJDIR}/*

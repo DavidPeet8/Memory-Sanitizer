@@ -1,3 +1,5 @@
 # Don't include objects as compiler specific
 **/obj/*
 **/mcheck
+!*/mcheck/
+**/testPrograms
