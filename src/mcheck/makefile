@@ -6,8 +6,8 @@
 # General Vars
 COMPILER=g++
 # -ldl lib dynamic lib
-FLAGS=-Werror=vla -Wall -MMD -lrt -ldl
-EXEC=mcheck
+FLAGS=-Werror=vla -Wall -MMD
+EXEC=mcheck.so
 CPPSTANDARD=c++14
 
 # Vars for project objects
@@ -19,7 +19,7 @@ DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 
 # Deal with common objects, common directory, and objects we need from common
 COMMON_DIR=../common
-COMMON_OBJS=Logger.o commonMethods.o messageManager.o customExceptions.o
+COMMON_OBJS=
 COMMON_OBJS_PATHS=$(call addprefix, ${COMMON_DIR}/obj/, ${COMMON_OBJS})
 INCLUDE_PATHS=../common/src
 
@@ -35,7 +35,7 @@ ${EXEC}: makeCommon compile link
 ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} -I $(INCLUDE_PATHS) -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} -fPIC -I $(INCLUDE_PATHS) -c -o $@ ${FLAGS}
 
 ######################## PHONY TARGETS #########################
 
@@ -50,9 +50,9 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -std=${CPPSTANDARD} -I $(INCLUDE_PATHS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS}
+	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC -I $(INCLUDE_PATHS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS}
 	@echo Linking Complete
 
 clean:
 	cd ${COMMON_DIR} && $(MAKE) clean
-	rm ${EXEC} ${OBJDIR}/*
+	rm ${OBJDIR}/* ${EXEC}

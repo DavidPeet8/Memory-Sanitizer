@@ -28,6 +28,7 @@
 * 		new (pointer to existant obj) MyClass --> constructs new object at pointer
 *	3) This shim implementation is far different than Valgrind, which instruments the executable on the fly 
 * 	   and runs it in a virtual CPU allowing for more advanced diagnostic info like memory leak line numbers
+* 	4) Placement Implementations will not need to be replaced at all, the memory consumption before and after will be the same anyway
 */
 
 // Two Implementations could be followed here - reimplement the new and delete overloads, or try to obtain pointers to the initial definitions
@@ -43,25 +44,32 @@
 #include <stdio.h>
 #include <new>
 
-void dumpMemory() 
+// Force internal linkage on methods that shouldn't clutter global namespace
+namespace 
 {
-	// Call the library implementing the storage of memory
+	void dumpMemory() 
+	{
+		printf("Dumping memory contents:\n");
+		// Call the library implementing the storage of memory
+	}
+
+	// Note that this is called on lib load, so given that this shim uses LD_PRELOAD, onLoad will be called before main is run
+	// - stdout does not exist yet, among other things
+	__attribute__((constructor)) 
+	void onLoad() 
+	{
+		// Get configuration from the posix messge queue that was set up by the cli
+
+		// Set up program exit handler - printing data
+		std::atexit(dumpMemory);
+	}
 }
 
-// Note that this is called on lib load, so given that this shim uses LD_PRELOAD, onLoad will be called before main is run
-// - stdout does not exist yet, among other things
-__attribute__((constructor)) 
-void onLoad() 
-{
-	// Get configuration from the posix messge queue that was set up by the cli
-	
-	// Set up program exit handler - printing data
-	std::atexit(dumpMemory);
-}
+// ----------------------------- NEW -----------------------------------
 
 void *operator new(size_t size)
 {
-	printf("Hit the shim implementation");
+	printf("Hit shim impl of throwing new\n");
 	void * retaddr = malloc(size);
 	if (retaddr == nullptr) 
 	{
@@ -72,14 +80,78 @@ void *operator new(size_t size)
 	return retaddr;
 }
 
+// Return nullptr on fail - default behavior of malloc
+void *operator new(size_t size, const std::nothrow_t& nothrow) noexcept 
+{
+	printf("Hit shim impl of nothrow new\n");
+	return malloc(size);
+}
+
+// ---------------------------- NEW [] --------------------------------
+
+void *operator new[](size_t size)
+{
+	printf("Hit shim impl of throwing new[]\n");
+	return ::operator new(size);
+}
+
+void *operator new[](size_t size, const std::nothrow_t& nothrow) noexcept
+{
+	printf("Hit shim impl of nothrow new[]\n");
+	return ::operator new(size, nothrow);
+}
+
+// ---------------------------- DELETE --------------------------------
+
 void operator delete(void *ptr) noexcept
 {
-
+	printf("Hit shim impl of normal delete\n");
+	free(ptr);
 }
 
-void callOrigNew(void *functionPtr)
+void operator delete(void *ptr, const std::nothrow_t& nothrow) noexcept
 {
-
-
+	printf("Hit shim impl of nothrow delete\n");
+	::operator delete(ptr);
 }
+
+void operator delete(void *ptr, size_t size) noexcept
+{
+	printf("Hit shim impl of sized delete\n");
+	::operator delete(ptr);
+}
+
+void operator delete(void *ptr, size_t size, const std::nothrow_t& nothrow) noexcept
+{
+	printf("Hit shim impl of sized nothrow delete\n");
+	::operator delete(ptr, nothrow);
+}
+
+
+// -------------------------- DELETE [] ------------------------------
+
+void operator delete[](void *ptr) noexcept
+{
+	printf("Hit shim impl of normal delete[]\n");
+	::operator delete(ptr);
+}
+
+void operator delete[](void *ptr, const std::nothrow_t& nothrow) noexcept
+{
+	printf("Hit shim impl of nothrow delete[]\n");
+	::operator delete[](ptr);
+}
+
+void operator delete[](void *ptr, size_t size) noexcept
+{
+	printf("Hit shim impl of sized delete[]\n");
+	::operator delete(ptr, size);
+}
+
+void operator delete[](void *ptr, size_t size, const std::nothrow_t& nothrow) noexcept
+{
+	printf("Hit shim impl of sized nothrow delete[]\n");
+	::operator delete(ptr, size, nothrow);
+}
+
 

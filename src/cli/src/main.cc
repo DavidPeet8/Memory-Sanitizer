@@ -47,7 +47,7 @@ int main (int argc, char **argv, char **envp)
 	int args = CLI::parseArgs(argc, argv);
 	// Create a write only message queue used to pass arguments to shared lib
 	// Shared lib will not be running at the time of message sending, so must use a Message Queue other IPC like pipes or FIFOs
-	Common::MessageManager queue("mcheckshim_arguments", O_WRONLY | O_CREAT);
+	Common::MessageManager queue("mcheck_config", O_WRONLY | O_CREAT);
 	queue.sendMessage("Boo", 3, 0);
 	Common::Logger::create(args);
 
