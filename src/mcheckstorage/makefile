@@ -6,7 +6,7 @@
 # General Vars
 COMPILER=g++
 # -ldl lib dynamic lib
-FLAGS=-Werror=vla -Wall -MMD 
+FLAGS=-Werror=vla -Wall -MMD -lrt -ldl -shared -fPIC -static-libstdc++ -Wl,-symbolic -Wl,-Bsymbolic-functions -Wl,--exclude-libs,ALL
 EXEC=libmcheckstorage.so
 CPPSTANDARD=c++17
 
@@ -36,7 +36,7 @@ ${EXEC}: makeCommon compile link
 ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} -fPIC $(INCLUDE_FLAGS) -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} $(INCLUDE_FLAGS) -c -o $@ ${FLAGS}
 
 ######################## PHONY TARGETS #########################
 
@@ -51,7 +51,9 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -ldl -lrt
+	${COMPILER}  -o ${EXEC} ${FLAGS} ${OBJDIR}/*.o ${COMMON_OBJS_PATHS}
+	#ld -Bsymbolic-functions -static-libstdc++ -symbolic -shared -fPIC --exclude-libs ALL -o ${EXEC} ${OBJDIR}/*.o ${COMMON_OBJS_PATHS}
+	#${COMPILER} -static-libstdc++ -Wl,-symbolic -shared -fPIC ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -ldl -lrt  
 	@echo Linking Complete
 
 clean:

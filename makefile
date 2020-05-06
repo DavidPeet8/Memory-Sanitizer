@@ -53,4 +53,4 @@ clean:
 	rm $(BUILD_DIR)/* 
 
 install:
-	cp $(BUILD_DIR)/*.so ~/mylibs
+	cp $(BUILD_DIR)/*.so $(INSTALL_DIR)

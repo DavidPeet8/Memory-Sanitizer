@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <mqueue.h>
+#include <string>
 
 namespace Common 
 {
@@ -20,7 +21,7 @@ namespace Common
 			~MessageManager();
 
 			void sendMessage(const char *msg, size_t length, unsigned int priority);
-			char *readMessage();
+			std::string readMessage();
 			void hardClose();
 	};
 

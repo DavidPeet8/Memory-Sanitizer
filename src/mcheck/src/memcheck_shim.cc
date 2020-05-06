@@ -45,20 +45,19 @@
 #include <stdio.h>
 #include <new>
 #include <dlfcn.h>
+#include <iostream>
 
 // Force internal linkage on methods that shouldn't clutter global namespace
 namespace 
 {
 	void dumpMemory() 
 	{
-		printf("Dumping memory contents:\n");
 		dump(); 
 	}
 
 	// Note that this is called on lib load, so given that this shim uses LD_PRELOAD, onLoad will be called before main is run
 	// - stdout does not exist yet, among other things
-	__attribute__((constructor)) 
-	void onLoad() 
+	__attribute__((constructor)) void onLoad() 
 	{
 		// Set up program exit handler - printing data
 		std::atexit(dumpMemory);
@@ -69,7 +68,7 @@ namespace
 
 void *operator new(size_t size)
 {
-	printf("Hit shim impl of throwing new\n");
+	//printf("Hit shim impl of throwing new\n");
 	void * retaddr = malloc(size);
 	if (retaddr == nullptr) 
 	{
@@ -94,13 +93,13 @@ void *operator new(size_t size, const std::nothrow_t& nothrow) noexcept
 
 void *operator new[](size_t size)
 {
-	printf("Hit shim impl of throwing new[]\n");
+	printf("Hit shim impl of throwing new[], size: %ld\n", size);
 	return ::operator new(size);
 }
 
 void *operator new[](size_t size, const std::nothrow_t& nothrow) noexcept
 {
-	printf("Hit shim impl of nothrow new[]\n");
+	printf("Hit shim impl of nothrow new[], size: %ld\n", size);
 	return ::operator new(size, nothrow);
 }
 

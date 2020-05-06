@@ -6,7 +6,7 @@
 
 # General Vars
 COMPILER=g++
-FLAGS=-Werror=vla -Wall -MMD
+FLAGS=-Werror=vla -Wall -MMD -fPIC
 CPPSTANDARD=c++17
 
 # Vars for project objects
@@ -30,7 +30,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	@echo making $@
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} -fPIC -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} -c -o $@ ${FLAGS}
 
 ######################## PHONY TARGETS #########################
 

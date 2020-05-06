@@ -35,12 +35,11 @@ namespace Common
 		if (ret != 0) throw QueueMessageException(errno);
 	}
 
-	char *MessageManager::readMessage()
+	std::string MessageManager::readMessage()
 	{
-		const int buffSize = 1000;
-		char *msg = new char[buffSize];
-		mq_receive(queue, msg, buffSize, nullptr);
-		return msg;
+		char msg[4096];
+		mq_receive(queue, msg, 4096, nullptr);
+		return std::string(msg);
 	}
 
 	void MessageManager::hardClose() 

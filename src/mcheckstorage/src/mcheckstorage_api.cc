@@ -4,17 +4,18 @@
 #include "Args.h"
 #include <cstddef>
 #include <memory>
+#include <iostream>
 
 namespace 
 {
 	LeakChecker checker;
-	std::unique_ptr<Common::Args> args;
+	Common::Args args;
 	__attribute__((constructor)) void onLoad() 
 	{
 		// Get information from the POSIX message queue
-		Common::MessageManager queue("/mcheck_config", O_RDONLY);
-		Common::Args *a = reinterpret_cast<Common::Args*>(queue.readMessage());
-		args.reset(a);
+		// TODO: Fix the difficulties with the POSIX Message queue
+		// Common::MessageManager queue("/mcheck_config", O_RDONLY);
+		args = Common::Args{/*std::stoul(queue.readMessage())*/0};// Read message is getting stuck
 	}	
 }
 

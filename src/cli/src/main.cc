@@ -40,6 +40,18 @@ namespace CLI
 		consumed = (i-1); // remove the exe name and all arguments to mcheck
 		return args;
 	}
+
+	void interpretStatus(int status, int pid) 
+	{
+		std::cout << "\n";
+		if (WIFEXITED(status))
+		{
+			std::cout << "Child process " << pid << " terminated normally." << std::endl;
+		} else if (WIFSIGNALED(status))
+		{
+			std::cout << "Child process " << pid << " terminated due to unhandled signal: " << WTERMSIG(status) << std::endl;
+		}
+	}
 }
 
 // Two binaries, the CLI and the actaual memcheck
@@ -55,11 +67,12 @@ int main (int argc, char **argv, char **envp)
 	attr.mq_msgsize = 4096;
 	attr.mq_maxmsg = 1;
 
-	std::cout << "Createing message queue " << argv[argsComsumed + 1] << std::endl;
+	std::cout << "opening queue" << std::endl;
 	Common::MessageManager queue("/mcheck_config", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR, &attr);
 	unsigned int size;
 	const char * msg = args.serialize(size);
 	queue.sendMessage(msg, size, 0);
+	std::cout << "Send shit to the queue" << std::endl;
 
 	// Use multiple processes allow for a orphan version
 	int pid = fork();
@@ -69,16 +82,17 @@ int main (int argc, char **argv, char **envp)
 			throw Common::ProcCreateException();
 		case 0: // We are in the child process
 		{
-			std::cout << "In the child proc" << std::endl;
+			std::cout << argv[argsComsumed + 1] << std::endl;
 			setenv("LD_PRELOAD", "/home/dpeet/mylibs/libmcheck.so", 1);
 			execv(argv[argsComsumed + 1], argv + argsComsumed + 2);
 			break;
 		}
 		default: // We are in the parent process
 			// wait for child to return
-			std::cout << "In the parent PROC" << std::endl;
+			std::cout << argv[0] << std::endl;
 			int status;
 			wait(&status);
+			CLI::interpretStatus(status, pid);
 			break;
 	}
 }
