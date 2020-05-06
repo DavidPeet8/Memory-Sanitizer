@@ -50,7 +50,7 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -ldl -L../../build -lmcheckstorage
+	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -ldl -L ~/mylibs -lmcheckstorage
 	@echo Linking Complete
 
 clean:

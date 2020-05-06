@@ -14,7 +14,7 @@
 
 namespace CLI 
 {
-	unsigned int parseArgs (int argc, char *argv[]) 
+	unsigned int parseArgs (int argc, char *argv[], int &consumed) 
 	{
 		int i;
 		unsigned int args;
@@ -37,7 +37,7 @@ namespace CLI
 			}
 		}
 
-		argv += (i-1); // remove the exe name and all arguments to mcheck
+		consumed = (i-1); // remove the exe name and all arguments to mcheck
 		return args;
 	}
 }
@@ -47,13 +47,15 @@ namespace CLI
 // Calling format: mcheck <mcheck args> executable_path <args to exe>
 int main (int argc, char **argv, char **envp) 
 {
-	Common::Args args {CLI::parseArgs(argc, argv)};
+	int argsComsumed = 0;
+	Common::Args args {CLI::parseArgs(argc, argv, argsComsumed)};
 	// Create a write only message queue used to pass arguments to shared lib
 	// Shared lib will not be running at the time of message sending, so must use a Message Queue other IPC like pipes or FIFOs
 	struct mq_attr attr;
 	attr.mq_msgsize = 4096;
 	attr.mq_maxmsg = 1;
 
+	std::cout << "Createing message queue " << argv[argsComsumed + 1] << std::endl;
 	Common::MessageManager queue("/mcheck_config", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR, &attr);
 	unsigned int size;
 	const char * msg = args.serialize(size);
@@ -68,8 +70,8 @@ int main (int argc, char **argv, char **envp)
 		case 0: // We are in the child process
 		{
 			std::cout << "In the child proc" << std::endl;
-			putenv(const_cast<char *>("LD_PRELOAD=./libmcheck.so"));
-			execv(argv[0], argv + 1);
+			setenv("LD_PRELOAD", "/home/dpeet/mylibs/libmcheck.so", 1);
+			execv(argv[argsComsumed + 1], argv + argsComsumed + 2);
 			break;
 		}
 		default: // We are in the parent process

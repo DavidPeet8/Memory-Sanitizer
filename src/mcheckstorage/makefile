@@ -19,7 +19,7 @@ DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 
 # Deal with common objects, common directory, and objects we need from common
 COMMON_DIR=../common
-COMMON_OBJS=Logger.o Args.o
+COMMON_OBJS=Logger.o Args.o customExceptions.o messageManager.o
 COMMON_OBJS_PATHS=$(call addprefix, ${COMMON_DIR}/obj/, ${COMMON_OBJS})
 INCLUDE_PATHS=../common/src ./include
 INCLUDE_FLAGS=$(call addprefix, -I , $(INCLUDE_PATHS))
@@ -51,7 +51,7 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS}
+	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -ldl -lrt
 	@echo Linking Complete
 
 clean:

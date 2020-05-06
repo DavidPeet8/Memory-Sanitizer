@@ -6,43 +6,51 @@
 CLIDIR=./src/cli
 MCHECKDIR=./src/mcheck
 MCHECKSTORAGEDIR=./src/mcheckstorage
+INSTALL_DIR= ~/mylibs/
+BUILD_DIR=./build
 
 ######################## PHONY TARGETS #########################
 
 all:
-	(cd $(CLIDIR) && $(MAKE))
-	cp $(CLIDIR)/mcheck ./build
+	cd $(CLIDIR) && $(MAKE)
+	cp $(CLIDIR)/mcheck $(BUILD_DIR)
 	cd $(MCHECKSTORAGEDIR) && $(MAKE)
-	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so ./build 
+	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so $(BUILD_DIR)
+	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so $(INSTALL_DIR)
 	cd $(MCHECKDIR) && $(MAKE)
-	cp $(MCHECKDIR)/libmcheck.so ./build
+	cp $(MCHECKDIR)/libmcheck.so $(BUILD_DIR)
+	cp $(MCHECKDIR)/libmcheck.so $(INSTALL_DIR) 
 
 debug: 
 	cd $(CLIDIR) && $(MAKE) debug
-	cp $(CLIDIR)/mcheck ./build
+	cp $(CLIDIR)/mcheck $(BUILD_DIR)
 	cd $(MCHECKSTORAGEDIR) && $(MAKE) debug
-	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so ./build 
+	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so $(BUILD_DIR)
+	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so $(INSTALL_DIR) 
 	cd $(MCHECKDIR) && $(MAKE) debug
-	cp $(MCHECKDIR)/libmcheck.so ./build
+	cp $(MCHECKDIR)/libmcheck.so $(BUILD_DIR)
+	cp $(MCHECKDIR)/libmcheck.so $(INSTALL_DIR) 
 
 compile: 
 	cd $(CLIDIR) && $(MAKE) compile
-	cp $(CLIDIR)/mcheck ./build
 	cd $(MCHECKSTORAGEDIR) && $(MAKE) compile
-	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so ./build 
 	cd $(MCHECKDIR) && $(MAKE) compile
-	cp $(MCHECKDIR)/libmcheck.so ./build
 
 link: 
 	cd $(CLIDIR) && $(MAKE) link
-	cp $(CLIDIR)/mcheck ./build
+	cp $(CLIDIR)/mcheck $(BUILD_DIR)
 	cd $(MCHECKSTORAGEDIR) && $(MAKE) link
-	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so ./build 
+	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so $(BUILD_DIR)
+	cp $(MCHECKSTORAGEDIR)/libmcheckstorage.so $(INSTALL_DIR) 
 	cd $(MCHECKDIR) && $(MAKE) link
-	cp $(MCHECKDIR)/libmcheck.so ./build
+	cp $(MCHECKDIR)/libmcheck.so $(BUILD_DIR)
+	cp $(MCHECKDIR)/libmcheck.so $(INSTALL_DIR) 
 
 clean:
 	cd $(CLIDIR) && $(MAKE) clean
 	cd $(MCHECKSTORAGEDIR) && $(MAKE) clean
 	cd $(MCHECKDIR) && $(MAKE) clean
-	rm ./build/* 
+	rm $(BUILD_DIR)/* 
+
+install:
+	cp $(BUILD_DIR)/*.so ~/mylibs
