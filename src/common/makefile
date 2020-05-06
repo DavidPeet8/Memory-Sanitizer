@@ -7,12 +7,12 @@
 # General Vars
 COMPILER=g++
 FLAGS=-Werror=vla -Wall -MMD
-CPPSTANDARD=c++14
+CPPSTANDARD=c++17
 
 # Vars for project objects
 SRCDIR=./src
 OBJDIR=./obj
-OBJECTS=Logger.o commonMethods.o messageManager.o customExceptions.o
+OBJECTS=Logger.o commonMethods.o messageManager.o customExceptions.o Args.o
 OBJECTPATHS=$(call addprefix, ${OBJDIR}/, ${OBJECTS})
 DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 
@@ -30,7 +30,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	@echo making $@
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} -fPIC -c -o $@ ${FLAGS}
 
 ######################## PHONY TARGETS #########################
 
@@ -38,6 +38,6 @@ debug: FLAGS+=-g
 debug: ${OBJECTPATHS}
 
 clean:
-	rm ${OBJDIR}/*.o ${OBJDIR}/*.d
+	rm -f ${OBJDIR}/*
 
 

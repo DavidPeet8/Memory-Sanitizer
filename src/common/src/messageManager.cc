@@ -4,18 +4,24 @@
 #include <sys/stat.h>
 #include <mqueue.h>
 #include <errno.h>
+#include <string>
+#include <iostream>
 
 namespace Common 
 {
 	MessageManager::MessageManager(const char *name, int oflag):
 	name{name},
 	queue{mq_open(name, oflag)}
-	{}
+	{
+		if (queue == -1) { throw QueueOpenException(errno); }
+	}
 
 	MessageManager::MessageManager(const char *name, int oflag, mode_t mode, mq_attr *attr):
 	name{name},
 	queue{mq_open(name, oflag, mode, attr)}
-	{}
+	{
+		if (queue == -1) { throw QueueOpenException(errno); }
+	}
 
 	MessageManager::~MessageManager() 
 	{
@@ -29,10 +35,10 @@ namespace Common
 		if (ret != 0) throw QueueMessageException(errno);
 	}
 
-	const char *MessageManager::readMessage()
+	char *MessageManager::readMessage()
 	{
 		const int buffSize = 1000;
-		char msg[] = char[buffSize];
+		char *msg = new char[buffSize];
 		mq_receive(queue, msg, buffSize, nullptr);
 		return msg;
 	}

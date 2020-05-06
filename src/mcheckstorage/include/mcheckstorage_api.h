@@ -4,9 +4,9 @@
 #include <cstddef>
 
 
-extern "C" void memAlloc(void *baseAddr, size_t size);
+extern "C" void addMemRef (void *baseAddr, size_t size);
 
-extern "C" void memDeAlloc (void *baseAddr);
+extern "C" void remMemRef (void *baseAddr);
 
 extern "C" void dump();
 

@@ -25,6 +25,14 @@ namespace Common
 			const char * what() const noexcept override;
 	};
 
+	class QueueOpenException : public std::exception 
+	{
+		int err;
+		public:
+			QueueOpenException(int err): err{err} {}
+			const char * what() const noexcept override;
+	};
+
 	class CloseQueueException : public std::exception 
 	{
 		int err, queue;

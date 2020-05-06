@@ -3,25 +3,27 @@
 #include "messageManager.h"
 #include "Args.h"
 #include <cstddef>
+#include <memory>
 
 namespace 
 {
 	LeakChecker checker;
-	Common::Args a{};
+	std::unique_ptr<Common::Args> args;
 	__attribute__((constructor)) void onLoad() 
 	{
 		// Get information from the POSIX message queue
-		Common::MessageManager queue("mcheck_config", O_RDONLY);
-		a = reinterpret_cast<Common::Args&>(queue.readMessage());
-	}
+		Common::MessageManager queue("/mcheck_config", O_RDONLY);
+		Common::Args *a = reinterpret_cast<Common::Args*>(queue.readMessage());
+		args.reset(a);
+	}	
 }
 
-extern "C" void memAlloc(void *baseAddr, size_t size) 
+extern "C" void addMemRef (void *baseAddr, size_t size) 
 {
 	checker.addRef(baseAddr, size);
 }
 
-extern "C" void memDeAlloc (void *baseAddr) 
+extern "C" void remMemRef (void *baseAddr) 
 {
 	checker.remRef(baseAddr);
 }

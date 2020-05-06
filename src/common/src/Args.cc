@@ -1,11 +1,13 @@
 #include "Args.h"
+#include <string>
 
-// Reinterpret the bits of this class as a C string to allow for transmission through the posix message queue
-// Note that this choice does enable ABI issues but that is ok
-// This does require that libraries are all compiled by the same compiler (for glibc / CRT reasons)
-// This is ok though, normal humans wanting to use this will compile all of the above using the same compiler
-const char * Args::serialize() 
+namespace Common
 {
-	return reinterpret_cast<const char*>(*this);
+	const char * Args::serialize(unsigned int &sizeInBytes) 
+	{
+		std::string res = std::to_string(args);
+		sizeInBytes = res.length() * sizeof(char);
+		return res.c_str();
+	}
 }
 

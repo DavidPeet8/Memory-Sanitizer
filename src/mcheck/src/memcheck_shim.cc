@@ -40,6 +40,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------
 
+#include "mcheckstorage_api.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <new>
@@ -51,8 +52,7 @@ namespace
 	void dumpMemory() 
 	{
 		printf("Dumping memory contents:\n");
-		// dlopen(""), dlsym, 
-		// Call the library implementing the storage of memory
+		dump(); 
 	}
 
 	// Note that this is called on lib load, so given that this shim uses LD_PRELOAD, onLoad will be called before main is run
@@ -77,6 +77,7 @@ void *operator new(size_t size)
 	}
 	// request succeeded, we have size and starting address of allocated virtual memory
 	// Call to store this information
+	addMemRef(retaddr, size);
 	return retaddr;
 }
 
@@ -84,7 +85,9 @@ void *operator new(size_t size)
 void *operator new(size_t size, const std::nothrow_t& nothrow) noexcept 
 {
 	printf("Hit shim impl of nothrow new\n");
-	return malloc(size);
+	void *retaddr = malloc(size);
+	addMemRef(retaddr, size);
+	return retaddr;
 }
 
 // ---------------------------- NEW [] --------------------------------
@@ -106,6 +109,7 @@ void *operator new[](size_t size, const std::nothrow_t& nothrow) noexcept
 void operator delete(void *ptr) noexcept
 {
 	printf("Hit shim impl of normal delete\n");
+	remMemRef(ptr);
 	free(ptr);
 }
 

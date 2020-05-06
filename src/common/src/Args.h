@@ -9,7 +9,7 @@ namespace Common
 	{
 		unsigned int args;
 		public:
-			const char * serialize();
+			const char * serialize(unsigned int &sizeInBytes);
 	};
 }
 

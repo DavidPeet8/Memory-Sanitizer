@@ -4,3 +4,4 @@
 !*/mcheck/
 **/testPrograms
 *.so
+core

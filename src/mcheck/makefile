@@ -5,10 +5,9 @@
 
 # General Vars
 COMPILER=g++
-# -ldl lib dynamic lib
-FLAGS=-Werror=vla -Wall -MMD -ldl
-EXEC=mcheck.so
-CPPSTANDARD=c++14
+FLAGS=-Werror=vla -Wall -MMD 
+EXEC=libmcheck.so
+CPPSTANDARD=c++17
 
 # Vars for project objects
 SRCDIR=./src
@@ -21,7 +20,8 @@ DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 COMMON_DIR=../common
 COMMON_OBJS=
 COMMON_OBJS_PATHS=$(call addprefix, ${COMMON_DIR}/obj/, ${COMMON_OBJS})
-INCLUDE_PATHS=../common/src
+INCLUDE_PATHS=../common/src ../mcheckstorage/include
+INCLUDE_FLAGS=$(call addprefix, -I , $(INCLUDE_PATHS))
 
 .PHONY: clean makeCommon debug compile link
 
@@ -35,7 +35,7 @@ ${EXEC}: makeCommon compile link
 ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} -fPIC -I $(INCLUDE_PATHS) -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} -fPIC $(INCLUDE_FLAGS) -c -o $@ ${FLAGS}
 
 ######################## PHONY TARGETS #########################
 
@@ -50,7 +50,7 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC -I $(INCLUDE_PATHS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS}
+	${COMPILER} -std=${CPPSTANDARD} -shared -fPIC $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -ldl -L../../build -lmcheckstorage
 	@echo Linking Complete
 
 clean:
