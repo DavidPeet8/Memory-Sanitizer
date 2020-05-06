@@ -51,6 +51,7 @@ int main (int argc, char **argv, char **envp)
 	queue.sendMessage("Boo", 3, 0);
 	Common::Logger::create(args);
 
+	// Use multiple processes allow for a orphan version
 	int pid = fork();
 	switch (pid) 
 	{
@@ -63,7 +64,7 @@ int main (int argc, char **argv, char **envp)
 			break;
 		}
 		default: // We are in the parent process
-
+			// wait for child to return
 			break;
 	}
 }

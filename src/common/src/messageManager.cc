@@ -29,6 +29,14 @@ namespace Common
 		if (ret != 0) throw QueueMessageException(errno);
 	}
 
+	const char *MessageManager::readMessage()
+	{
+		const int buffSize = 1000;
+		char msg[] = char[buffSize];
+		mq_receive(queue, msg, buffSize, nullptr);
+		return msg;
+	}
+
 	void MessageManager::hardClose() 
 	{
 		int ret = mq_close(queue);

@@ -3,22 +3,24 @@
 
 #include <vector>
 #include <map>
+#include <optional>
 
 struct MemRequest 
 {
-	unsigned long baseAddr;
-	size_t size;
+	void * const baseAddr;
+	const std::optional<size_t> size;
+	const bool success;
 };
 
 class LeakChecker 
 {
-	std::map<unsigned long, size_t> memRefs;
+	std::map<void *, size_t> memRefs;
 	std::vector<MemRequest> allocationTimeline;
 
 	public:
 		void addRef(void * const baseAddr, const size_t size);
 		void remRef(void * const baseAddr);
-		void dumpRefs();
+		void dumpRefs() const;
 };
 
 

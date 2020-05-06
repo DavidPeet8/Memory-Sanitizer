@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <new>
+#include <dlfcn.h>
 
 // Force internal linkage on methods that shouldn't clutter global namespace
 namespace 
@@ -50,6 +51,7 @@ namespace
 	void dumpMemory() 
 	{
 		printf("Dumping memory contents:\n");
+		// dlopen(""), dlsym, 
 		// Call the library implementing the storage of memory
 	}
 
@@ -58,8 +60,6 @@ namespace
 	__attribute__((constructor)) 
 	void onLoad() 
 	{
-		// Get configuration from the posix messge queue that was set up by the cli
-
 		// Set up program exit handler - printing data
 		std::atexit(dumpMemory);
 	}

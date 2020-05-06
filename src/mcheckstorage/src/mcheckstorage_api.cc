@@ -1,16 +1,18 @@
 #include "mcheckstorage_api.h"
 #include "LeakChecker.h"
-#include "MessageManager.h"
+#include "messageManager.h"
+#include "Args.h"
 #include <cstddef>
 
 namespace 
 {
 	LeakChecker checker;
+	Common::Args a{};
 	__attribute__((constructor)) void onLoad() 
 	{
 		// Get information from the POSIX message queue
-		MessageManager queue("mcheck_config", O_RONLY);
-		reinterpret_cast<>(queue.readMessage());
+		Common::MessageManager queue("mcheck_config", O_RDONLY);
+		a = reinterpret_cast<Common::Args&>(queue.readMessage());
 	}
 }
 
