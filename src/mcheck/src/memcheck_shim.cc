@@ -50,7 +50,7 @@
 // Force internal linkage on methods that shouldn't clutter global namespace
 namespace 
 {
-	void dumpMemory() 
+	void onDestroy() 
 	{
 		dump(); 
 	}
@@ -60,7 +60,7 @@ namespace
 	__attribute__((constructor)) void onLoad() 
 	{
 		// Set up program exit handler - printing data
-		std::atexit(dumpMemory);
+		std::atexit(onDestroy);
 	}
 }
 

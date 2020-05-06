@@ -2,10 +2,19 @@
 #include "LeakChecker.h"
 #include <stdio.h>
 
+/*
+* The method implementations below under the hood require usage of the new operator
+* As tracking the memory consumption of the program monitoring the memory consumption leads to horrible experiences 
+* with infinite recursion, not to mention the information being couter productive anyway 
+* I will link this library statically with libstdc++ and call it a day
+* The other implementation would be to write the below implementation only using malloc free etc (C Memory manipulation)
+* Although this is a significantly more efficient solution, quite frankly this does not sound fun
+* I am writing this shim in C++ for a reason
+*/
+
 void LeakChecker::addRef(void * const baseAddr, const size_t size)
 {
 	if (memRefs.find(baseAddr) != memRefs.end()) throw "Something very bad happened... :'(";
-	// Both of the following rely on underlying new operations leading to infinite recursion
 	memRefs[baseAddr] = size;
  	allocationTimeline.emplace_back(MemRequest{baseAddr, size, true});
 }

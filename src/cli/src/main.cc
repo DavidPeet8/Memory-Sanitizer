@@ -67,12 +67,10 @@ int main (int argc, char **argv, char **envp)
 	attr.mq_msgsize = 4096;
 	attr.mq_maxmsg = 1;
 
-	std::cout << "opening queue" << std::endl;
 	Common::MessageManager queue("/mcheck_config", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR, &attr);
 	unsigned int size;
 	const char * msg = args.serialize(size);
 	queue.sendMessage(msg, size, 0);
-	std::cout << "Send shit to the queue" << std::endl;
 
 	// Use multiple processes allow for a orphan version
 	int pid = fork();

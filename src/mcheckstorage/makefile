@@ -6,7 +6,7 @@
 # General Vars
 COMPILER=g++
 # -ldl lib dynamic lib
-FLAGS=-Werror=vla -Wall -MMD -lrt -ldl -shared -fPIC -static-libstdc++ -Wl,-symbolic -Wl,-Bsymbolic-functions -Wl,--exclude-libs,ALL
+FLAGS=-Werror=vla -Wall -MMD -ldl -lrt -shared -fPIC -static-libstdc++ -Wl,-symbolic -Wl,-Bsymbolic-functions -Wl,--exclude-libs,ALL
 EXEC=libmcheckstorage.so
 CPPSTANDARD=c++17
 
@@ -52,8 +52,6 @@ compile: $(OBJECTPATHS)
 
 link: 
 	${COMPILER}  -o ${EXEC} ${FLAGS} ${OBJDIR}/*.o ${COMMON_OBJS_PATHS}
-	#ld -Bsymbolic-functions -static-libstdc++ -symbolic -shared -fPIC --exclude-libs ALL -o ${EXEC} ${OBJDIR}/*.o ${COMMON_OBJS_PATHS}
-	#${COMPILER} -static-libstdc++ -Wl,-symbolic -shared -fPIC ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -ldl -lrt  
 	@echo Linking Complete
 
 clean:
