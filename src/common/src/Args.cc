@@ -2,6 +2,10 @@
 #include <string>
 #include <iostream>
 
+// Chose to use reinterpret cast because it is a pain transferring data through const char * otherwise
+// This may potentially affect ABI compatibility forcing readers and writers to have been 
+// compiled on the same compiler but that is ok
+
 namespace Common
 {
 	const char * Args::serialize(unsigned int &sizeInBytes) 
