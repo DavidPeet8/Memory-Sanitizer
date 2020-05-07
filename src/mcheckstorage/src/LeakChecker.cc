@@ -1,5 +1,6 @@
 
 #include "LeakChecker.h"
+#include "Logger.h"
 #include <stdio.h>
 
 /*
@@ -14,6 +15,7 @@
 
 void LeakChecker::addRef(void * const baseAddr, const size_t size)
 {
+	Common::Logger::get() << "Adding ref\n";
 	if (memRefs.find(baseAddr) != memRefs.end()) throw "Something very bad happened... :'(";
 	memRefs[baseAddr] = size;
  	allocationTimeline.emplace_back(MemRequest{baseAddr, size, true});
@@ -21,6 +23,7 @@ void LeakChecker::addRef(void * const baseAddr, const size_t size)
 
 void LeakChecker::remRef(void * const baseAddr) 
 {
+	Common::Logger::get() << "Removing ref\n";
 	auto refIt = memRefs.find(baseAddr);
 	if (refIt != memRefs.end()) 
 	{

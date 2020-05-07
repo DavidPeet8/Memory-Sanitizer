@@ -1,4 +1,5 @@
 #include "mcheckstorage_api.h"
+#include "Logger.h"
 #include "LeakChecker.h"
 #include "messageManager.h"
 #include "Args.h"
@@ -15,10 +16,8 @@ namespace
 	{
 		// Get information from the POSIX message queue
 		Common::MessageManager queue("/mcheck_config", O_RDONLY);
-		std::istringstream message{ queue.readMessage() };
-		unsigned int msgArgs = 0;
-		message >> msgArgs;
-		args = Common::Args{msgArgs};// Read message is getting stuck
+		args.deserialize(queue.readMessage());
+		Common::Logger::create(args);
 	}	
 }
 

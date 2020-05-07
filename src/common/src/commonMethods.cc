@@ -1,3 +1,4 @@
+#include "commonMethods.h"
 #include <string>
 #include <time.h>
 

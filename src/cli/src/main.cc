@@ -2,6 +2,7 @@
 #include "messageManager.h"
 #include "Logger.h"
 #include "Args.h"
+#include "Constants.h"
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <mqueue.h>
@@ -17,7 +18,7 @@ namespace CLI
 	unsigned int parseArgs (int argc, char *argv[], int &consumed) 
 	{
 		int i;
-		unsigned int args;
+		unsigned int args = 0;
 		for(i = 1; i < argc; i++) // argv[0] is calling name
 		{
 			if (argv[i][0] == '-') // As these are C strings, argv[i][1] must be data or 0
@@ -54,22 +55,22 @@ namespace CLI
 	}
 }
 
-// Two binaries, the CLI and the actaual memcheck
-// Memcheck is a shared lib, CLI is an exe
+
 // Calling format: mcheck <mcheck args> executable_path <args to exe>
 int main (int argc, char **argv, char **envp) 
 {
 	int argsComsumed = 0;
 	Common::Args args {CLI::parseArgs(argc, argv, argsComsumed)};
-	// Create a write only message queue used to pass arguments to shared lib
-	// Shared lib will not be running at the time of message sending, so must use a Message Queue other IPC like pipes or FIFOs
-	struct mq_attr attr;
-	attr.mq_msgsize = 4096;
-	attr.mq_maxmsg = 1;
-
-	Common::MessageManager queue("/mcheck_config", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR, &attr);
 	unsigned int size;
 	const char * msg = args.serialize(size);
+
+	// Create a write only message queue used to pass arguments to shared lib
+	// Shared lib will not be running at the time of message sending, so use a kernel persistent IPC method
+	struct mq_attr attr;
+	attr.mq_msgsize = Constants::msgSize;
+	attr.mq_maxmsg = Constants::maxNumMsg;
+
+	Common::MessageManager queue("/mcheck_config", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR, &attr);	
 	queue.sendMessage(msg, size, 0);
 
 	int pid = fork();

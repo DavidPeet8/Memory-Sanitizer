@@ -12,6 +12,8 @@ namespace Common
 	{
 		const char * name;
 		mqd_t queue;
+		long int msgSize = 0;
+		long int max_msgSize = 0;
 
 		public:
 			MessageManager(const char *name, int oflag);
@@ -19,7 +21,7 @@ namespace Common
 			~MessageManager();
 
 			void sendMessage(const char *msg, size_t length, unsigned int priority);
-			std::string readMessage();
+			const char *readMessage();
 			void hardClose();
 	};
 
