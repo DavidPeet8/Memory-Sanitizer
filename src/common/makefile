@@ -16,7 +16,7 @@ OBJECTS=Logger.o commonMethods.o messageManager.o customExceptions.o Args.o
 OBJECTPATHS=$(call addprefix, ${OBJDIR}/, ${OBJECTS})
 DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 
-.PHONY: clean debug
+.PHONY: clean debug all
 
 ####################### TARGETS #########################
 

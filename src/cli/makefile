@@ -56,4 +56,4 @@ link:
 
 clean:
 	cd ${COMMON_DIR} && $(MAKE) clean
-	rm ${EXEC} ${OBJDIR}/*.o ${OBJDIR}/*.d
+	rm -f ${EXEC} ${OBJDIR}/*.o ${OBJDIR}/*.d

@@ -50,7 +50,7 @@ clean:
 	cd $(CLIDIR) && $(MAKE) clean
 	cd $(MCHECKSTORAGEDIR) && $(MAKE) clean
 	cd $(MCHECKDIR) && $(MAKE) clean
-	rm $(BUILD_DIR)/* 
+	rm -f $(BUILD_DIR)/* 
 
 install:
 	cp $(BUILD_DIR)/*.so $(INSTALL_DIR)
