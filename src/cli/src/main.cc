@@ -72,7 +72,6 @@ int main (int argc, char **argv, char **envp)
 	const char * msg = args.serialize(size);
 	queue.sendMessage(msg, size, 0);
 
-	// Use multiple processes allow for a orphan version
 	int pid = fork();
 	switch (pid) 
 	{
@@ -80,14 +79,11 @@ int main (int argc, char **argv, char **envp)
 			throw Common::ProcCreateException();
 		case 0: // We are in the child process
 		{
-			std::cout << argv[argsComsumed + 1] << std::endl;
 			setenv("LD_PRELOAD", "/home/dpeet/mylibs/libmcheck.so", 1);
 			execv(argv[argsComsumed + 1], argv + argsComsumed + 2);
 			break;
 		}
 		default: // We are in the parent process
-			// wait for child to return
-			std::cout << argv[0] << std::endl;
 			int status;
 			wait(&status);
 			CLI::interpretStatus(status, pid);
