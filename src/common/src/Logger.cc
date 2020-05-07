@@ -18,7 +18,7 @@ namespace Common
 	void Logger::create(std::ostream &outstream) 
 	{
 		if (exists()) throw LoggerRecreationException();
-		Logger::logger.reset(new Logger(Common::Args{0}, outstream));
+		Logger::logger.reset(new Logger(Common::Args(), outstream));
 	}
 
 	void Logger::create(const Common::Args &args) 
@@ -30,7 +30,7 @@ namespace Common
 	void Logger::create() 
 	{
 		if (exists()) throw LoggerRecreationException();
-		Logger::logger.reset(new Logger(Common::Args{0}, std::cout));
+		Logger::logger.reset(new Logger(Common::Args(), std::cout));
 	}
 
 	Logger &Logger::get()
@@ -48,8 +48,7 @@ namespace Common
 
 	Logger::Logger(const Common::Args &args, std::ostream &out): 
 	verbose{static_cast<bool>(args.args & ARG_VERBOSE)}, 
-	out{out},
-	args{args.args} 
+	out{out}
 	{}
 
 	bool Logger::exists()

@@ -13,9 +13,10 @@ namespace Common
 		public:
 			const char * serialize(unsigned int &sizeInBytes);
 			void deserialize(const char *msg);
+			Args();
+			Args(unsigned int args);
 	};
 
-	std::istream &operator>>(std::istream &in, Args &args);
 }
 
 #endif

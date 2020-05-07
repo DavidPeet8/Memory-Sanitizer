@@ -22,7 +22,6 @@ namespace Common
 
 			void sendMessage(const char *msg, size_t length, unsigned int priority);
 			const char *readMessage();
-			void hardClose();
 	};
 
 }

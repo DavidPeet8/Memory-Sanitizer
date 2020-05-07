@@ -35,7 +35,7 @@ namespace Common
 	void MessageManager::sendMessage(const char *msg, size_t length, unsigned int priority) 
 	{
 		int ret = mq_send(queue, msg, length, priority);
-		if (ret != 0) throw QueueMessageException(errno);
+		if (ret != 0) { throw QueueMessageException(errno); }
 	}
 
 	const char *MessageManager::readMessage()
@@ -43,12 +43,6 @@ namespace Common
 		char *msg = new char[Constants::msgSize];
 		mq_receive(queue, msg, Constants::msgSize, nullptr);
 		return msg;
-	}
-
-	void MessageManager::hardClose() 
-	{
-		int ret = mq_close(queue);
-		if (ret != 0) throw CloseQueueException(errno, queue);
 	}
 
 }

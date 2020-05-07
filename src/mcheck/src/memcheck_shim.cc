@@ -20,22 +20,21 @@
 *
 * 
 * Notes: 
-* 	1) nothrow constant --> does not mean will not fail, just will not throw when it does
-* 		- means new will return nullptr on fail instead of throwing
+* 	1) nothrow constant - means new will return nullptr on fail instead of throwing
 * 	2) invocations of different news
 * 		new MyClass
 *		new (std::nothrow) MyClass --> constructs new object but returns nullptr if alloc fails
 * 		new (pointer to existant obj) MyClass --> constructs new object at pointer
 *	3) This shim implementation is far different than Valgrind, which instruments the executable on the fly 
-* 	   and runs it in a virtual CPU allowing for more advanced diagnostic info like memory leak line numbers
-* 	4) Placement Implementations will not need to be replaced at all, the memory consumption before and after will be the same anyway
+* 	   Valgrind runs executable in a virtual CPU allowing for more advanced diagnostic info like memory leak line numbers
+* 	4) Placement Implementations will not need to be replaced at all, the memory consumption before and after will be the same
 */
 
 // Two Implementations could be followed here - reimplement the new and delete overloads, or try to obtain pointers to the initial definitions
 // I am Choosing to reimplment the overloads
 // Portability would be garbage if I used function pointer implementation
-// 	- 'new' and 'delete' are not symbols in the <new> header, their symbols have already been mangled into assembly lables 
-//	- Ex. _Zwnm is the symbol to use to retrieve a pointer to new using dlsym() but this is likely compiler specific
+// 	- 'new' and 'delete' are not symbols in the <new> header, their symbols have already been mangled into strange lables 
+//	- Ex. _Zwnm is the symbol to use to retrieve a pointer to 'new' using dlsym() but this is likely compiler specific
 // 
 
 // -----------------------------------------------------------------------------------------------------------------------------------
@@ -56,10 +55,10 @@ namespace
 	}
 
 	// Note that this is called on lib load, so given that this shim uses LD_PRELOAD, onLoad will be called before main is run
-	// - stdout does not exist yet, among other things ... be careful what is done here
+	// stdout does not exist yet, among other things ... be careful what is done here
 	__attribute__((constructor)) void onLoad() 
 	{
-		// Set up program exit handler - printing data
+		// Set up program exit handler
 		std::atexit(onDestroy);
 	}
 }

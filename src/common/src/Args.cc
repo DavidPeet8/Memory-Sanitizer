@@ -23,12 +23,10 @@ namespace Common
 		delete msg;
 	}
 
-	std::istream &operator>>(std::istream &in, Args &args) 
-	{
-		unsigned int newArgs = 0;
-		in >> newArgs;
-		args.args = newArgs;
-		return in;
-	}
+	Args::Args():
+	args{0}
+	{}
+
+	Args::Args(unsigned int args): args{args} {}
 }
 

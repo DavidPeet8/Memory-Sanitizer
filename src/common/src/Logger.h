@@ -14,7 +14,6 @@ namespace Common
 		private:
 			bool verbose;
 			std::ostream &out;
-			unsigned int args;
 			static std::unique_ptr<Logger> logger;
 
 		protected: 
@@ -45,10 +44,11 @@ namespace Common
 			static Logger &get();
 	};
 
+	// ----------------------------- TEMPLATE IMPLEMENTATIONS ----------------------------------
+
 	template<typename OutType>
 	void Logger::log(std::ostream& out, const OutType &data, const bool flush) 
 	{
-		std::cout << "Logger Args: " << args << std::endl;
 		if (verbose)
 		{
 			out << getTimeStamp() << data << "\n";

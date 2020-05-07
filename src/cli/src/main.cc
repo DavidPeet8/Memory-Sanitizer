@@ -57,7 +57,7 @@ namespace CLI
 
 
 // Calling format: mcheck <mcheck args> executable_path <args to exe>
-int main (int argc, char **argv, char **envp) 
+int main (int argc, char **argv) 
 {
 	int argsComsumed = 0;
 	Common::Args args {CLI::parseArgs(argc, argv, argsComsumed)};
@@ -80,7 +80,8 @@ int main (int argc, char **argv, char **envp)
 			throw Common::ProcCreateException();
 		case 0: // We are in the child process
 		{
-			setenv("LD_PRELOAD", "/home/dpeet/mylibs/libmcheck.so", 1);
+			std::string libPath = std::string(getenv("HOME")) + "/mylibs/libmcheck.so";
+			setenv("LD_PRELOAD", libPath.c_str(), 1);
 			execv(argv[argsComsumed + 1], argv + argsComsumed + 2);
 			break;
 		}

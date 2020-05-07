@@ -7,7 +7,11 @@ namespace Common
 	std::string getTimeStamp() 
 	{
 		time_t curTime = time(nullptr);
-		return std::string("[ ") + ctime(&curTime) + " ]";
+		std::string res = "[ ";
+		res += ctime(&curTime);
+		res.pop_back();
+		res += " ] ";
+		return res;
 	}
 }
 
