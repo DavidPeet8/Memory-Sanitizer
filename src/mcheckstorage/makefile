@@ -6,7 +6,8 @@
 # General Vars
 COMPILER=g++
 # -ldl lib dynamic lib
-FLAGS=-Werror=vla -Wall -MMD -static-libstdc++ -shared -fPIC -Wl,-Bsymbolic-functions
+COMPILATION_FLAGS=-Werror=vla -Wall -MMD -fPIC 
+LINKER_FLAGS=-shared -fPIC -Wl,-Bsymbolic-functions -static-libstdc++ -lrt
 EXEC=libmcheckstorage.so
 CPPSTANDARD=c++17
 
@@ -36,14 +37,14 @@ ${EXEC}: makeCommon compile link
 ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} $(INCLUDE_FLAGS) -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} $(INCLUDE_FLAGS) -c -o $@ ${COMPILATION_FLAGS}
 
 ######################## PHONY TARGETS #########################
 
 makeCommon:
 	cd ${COMMON_DIR} && $(MAKE) ${COMMON_TARGET} # Make the common objects before trying to do any sort of linking
 
-debug: FLAGS+=-g 
+debug: COMPILATION_FLAGS+=-g 
 debug: COMMON_TARGET=debug
 debug: ${EXEC}
 
@@ -51,7 +52,7 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -v -o ${EXEC} ${FLAGS} ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -lrt
+	${COMPILER} -o ${EXEC} ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} ${LINKER_FLAGS}
 	@echo Linking Complete
 
 clean:

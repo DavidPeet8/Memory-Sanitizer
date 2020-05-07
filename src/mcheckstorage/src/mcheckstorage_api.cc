@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <memory>
 #include <iostream>
+#include <sstream>
 
 namespace 
 {
@@ -13,9 +14,11 @@ namespace
 	__attribute__((constructor)) void onLoad() 
 	{
 		// Get information from the POSIX message queue
-		// TODO: Fix the difficulties with the POSIX Message queue
 		Common::MessageManager queue("/mcheck_config", O_RDONLY);
-		args = Common::Args{/*std::stoul(queue.readMessage())*/0};// Read message is getting stuck
+		std::istringstream message{ queue.readMessage() };
+		unsigned int msgArgs = 0;
+		message >> msgArgs;
+		args = Common::Args{msgArgs};// Read message is getting stuck
 	}	
 }
 

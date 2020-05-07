@@ -83,7 +83,6 @@ void *operator new(size_t size)
 // Return nullptr on fail - default behavior of malloc
 void *operator new(size_t size, const std::nothrow_t& nothrow) noexcept 
 {
-	printf("Hit shim impl of nothrow new\n");
 	void *retaddr = malloc(size);
 	addMemRef(retaddr, size);
 	return retaddr;
@@ -93,13 +92,11 @@ void *operator new(size_t size, const std::nothrow_t& nothrow) noexcept
 
 void *operator new[](size_t size)
 {
-	printf("Hit shim impl of throwing new[], size: %ld\n", size);
 	return ::operator new(size);
 }
 
 void *operator new[](size_t size, const std::nothrow_t& nothrow) noexcept
 {
-	printf("Hit shim impl of nothrow new[], size: %ld\n", size);
 	return ::operator new(size, nothrow);
 }
 
@@ -107,26 +104,22 @@ void *operator new[](size_t size, const std::nothrow_t& nothrow) noexcept
 
 void operator delete(void *ptr) noexcept
 {
-	printf("Hit shim impl of normal delete\n");
 	remMemRef(ptr);
 	free(ptr);
 }
 
 void operator delete(void *ptr, const std::nothrow_t& nothrow) noexcept
 {
-	printf("Hit shim impl of nothrow delete\n");
 	::operator delete(ptr);
 }
 
 void operator delete(void *ptr, size_t size) noexcept
 {
-	printf("Hit shim impl of sized delete\n");
 	::operator delete(ptr);
 }
 
 void operator delete(void *ptr, size_t size, const std::nothrow_t& nothrow) noexcept
 {
-	printf("Hit shim impl of sized nothrow delete\n");
 	::operator delete(ptr, nothrow);
 }
 
@@ -135,25 +128,21 @@ void operator delete(void *ptr, size_t size, const std::nothrow_t& nothrow) noex
 
 void operator delete[](void *ptr) noexcept
 {
-	printf("Hit shim impl of normal delete[]\n");
 	::operator delete(ptr);
 }
 
 void operator delete[](void *ptr, const std::nothrow_t& nothrow) noexcept
 {
-	printf("Hit shim impl of nothrow delete[]\n");
 	::operator delete[](ptr);
 }
 
 void operator delete[](void *ptr, size_t size) noexcept
 {
-	printf("Hit shim impl of sized delete[]\n");
 	::operator delete(ptr, size);
 }
 
 void operator delete[](void *ptr, size_t size, const std::nothrow_t& nothrow) noexcept
 {
-	printf("Hit shim impl of sized nothrow delete[]\n");
 	::operator delete(ptr, size, nothrow);
 }
 

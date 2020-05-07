@@ -5,7 +5,8 @@
 
 # General Vars
 COMPILER=g++
-FLAGS=-Werror=vla -Wall -MMD -lrt
+COMPILATION_FLAGS=-Werror=vla -Wall -MMD 
+LINKER_FLAGS=-lrt
 EXEC=mcheck
 CPPSTANDARD=c++17
 
@@ -35,14 +36,14 @@ ${EXEC}: makeCommon compile link
 ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} $(INCLUDE_FLAGS) -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} $(INCLUDE_FLAGS) -c -o $@ ${COMPILATION_FLAGS}
 
 ######################## PHONY TARGETS #########################
 
 makeCommon:
 	cd ${COMMON_DIR} && $(MAKE) ${COMMON_TARGET} # Make the common objects before trying to do any sort of linking
 
-debug: FLAGS+=-g 
+debug: COMPILATION_FLAGS+=-g 
 debug: COMMON_TARGET=debug
 debug: ${EXEC}
 
@@ -50,7 +51,7 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -std=${CPPSTANDARD} $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS}
+	${COMPILER} ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${LINKER_FLAGS}
 	@echo Linking Complete
 
 clean:
