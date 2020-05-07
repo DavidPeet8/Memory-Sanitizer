@@ -1,8 +1,6 @@
 #ifndef MESSAGE_MANAGER_H
 #define MESSAGE_MANAGER_H
 
-#include <fcntl.h>
-#include <sys/stat.h>
 #include <mqueue.h>
 #include <string>
 

@@ -14,7 +14,7 @@ namespace
 	{
 		// Get information from the POSIX message queue
 		// TODO: Fix the difficulties with the POSIX Message queue
-		// Common::MessageManager queue("/mcheck_config", O_RDONLY);
+		Common::MessageManager queue("/mcheck_config", O_RDONLY);
 		args = Common::Args{/*std::stoul(queue.readMessage())*/0};// Read message is getting stuck
 	}	
 }

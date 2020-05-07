@@ -5,7 +5,7 @@
 
 # General Vars
 COMPILER=g++
-FLAGS=-Werror=vla -Wall -MMD
+FLAGS=-Werror=vla -Wall -MMD -lrt
 EXEC=mcheck
 CPPSTANDARD=c++17
 
@@ -21,6 +21,7 @@ COMMON_DIR=../common
 COMMON_OBJS=Logger.o commonMethods.o messageManager.o customExceptions.o Args.o
 COMMON_OBJS_PATHS=$(call addprefix, ${COMMON_DIR}/obj/, ${COMMON_OBJS})
 INCLUDE_PATHS=../common/src
+INCLUDE_FLAGS=$(call addprefix, -I , $(INCLUDE_PATHS))
 
 .PHONY: clean makeCommon debug compile link
 
@@ -34,7 +35,7 @@ ${EXEC}: makeCommon compile link
 ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 	# $@ --> is the name of the makefile target
 	# $< is the name of the first prerequisite
-	${COMPILER} $< -std=${CPPSTANDARD} -I $(INCLUDE_PATHS) -c -o $@ ${FLAGS}
+	${COMPILER} $< -std=${CPPSTANDARD} $(INCLUDE_FLAGS) -c -o $@ ${FLAGS}
 
 ######################## PHONY TARGETS #########################
 
@@ -49,7 +50,7 @@ compile: $(OBJECTPATHS)
 	@echo Compiled
 
 link: 
-	${COMPILER} -std=${CPPSTANDARD} -I $(INCLUDE_PATHS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS} -lrt
+	${COMPILER} -std=${CPPSTANDARD} $(INCLUDE_FLAGS) ${OBJDIR}/*.o ${COMMON_OBJS_PATHS} -o ${EXEC} ${FLAGS}
 	@echo Linking Complete
 
 clean:

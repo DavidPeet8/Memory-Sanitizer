@@ -11,14 +11,14 @@ namespace Common
 {
 	MessageManager::MessageManager(const char *name, int oflag):
 	name{name},
-	queue{mq_open(name, oflag)}
+	queue{ mq_open(name, oflag) }
 	{
 		if (queue == -1) { throw QueueOpenException(errno); }
 	}
 
 	MessageManager::MessageManager(const char *name, int oflag, mode_t mode, mq_attr *attr):
 	name{name},
-	queue{mq_open(name, oflag, mode, attr)}
+	queue{ mq_open(name, oflag, mode, attr) }
 	{
 		if (queue == -1) { throw QueueOpenException(errno); }
 	}

@@ -5,7 +5,7 @@
 
 # General Vars
 COMPILER=g++
-FLAGS=-Werror=vla -Wall -MMD 
+FLAGS=-Werror=vla -Wall -MMD
 EXEC=libmcheck.so
 CPPSTANDARD=c++17
 

@@ -56,7 +56,7 @@ namespace
 	}
 
 	// Note that this is called on lib load, so given that this shim uses LD_PRELOAD, onLoad will be called before main is run
-	// - stdout does not exist yet, among other things
+	// - stdout does not exist yet, among other things ... be careful what is done here
 	__attribute__((constructor)) void onLoad() 
 	{
 		// Set up program exit handler - printing data
