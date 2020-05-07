@@ -67,7 +67,6 @@ namespace
 
 void *operator new(size_t size)
 {
-	//printf("Hit shim impl of throwing new\n");
 	void * retaddr = malloc(size);
 	if (retaddr == nullptr) 
 	{
