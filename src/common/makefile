@@ -6,7 +6,7 @@
 
 # General Vars
 COMPILER=g++
-FLAGS=-Werror=vla -Wall -MMD -fPIC
+FLAGS=-Werror=vla -Wall -MMD -fPIC -lrt
 CPPSTANDARD=c++17
 
 # Vars for project objects
