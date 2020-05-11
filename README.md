@@ -5,7 +5,7 @@ This shim is build to run on Linux based operating systems (tested on Ubuntu 18.
 ## Setup
 - clone git repository
 - change to root project directory and run make
-- install shared objects into _____
+- install shared objects into `~/mylibs`
 
 ## Details
 **What this project will do:**
@@ -22,9 +22,6 @@ This shim is build to run on Linux based operating systems (tested on Ubuntu 18.
 - The implementation in this project is far simpler and consequently far more light weight 
 - I implement a shim oveloading the new and delete operators provided by the standard library, then I force this shim to be linked first so that the overloads take effect
 	- The shim then makes calls to a second shared library to record the memory request, and on program completion this library dumps the recorded memory requests
-
-## License
-
 
 ## Future Improvements
 -Allow for the data collector to persist the allocation timeline to a swap file should the time line begin to eat up too much memory
