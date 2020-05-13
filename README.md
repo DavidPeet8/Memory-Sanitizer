@@ -1,29 +1,37 @@
 
-# Memcheck-Shim
-This project is meant to emulate the behaviour of Valgrind, while remaining light weight, minorly impacting executable runtime. My  project leak checks an executable by intercepting library calls to new and delete implemented in libstdc++, then using this information to track memory consumption.
-This shim is build to run on Linux based operating systems (tested on Ubuntu 18.0.4) using the c++17 standard. My shim does not and will not support Windows.
+
+# MCheck
+MCheck is a streamlined memory leak checker similar to Valgrind. This project leak checks an executable by intercepting library calls to new and delete implemented in libstdc++. The intercepted calls then use the contextual information to track heap memory consumption.
+This shim is built to run on Linux based operating systems only (tested on Ubuntu 18.0.4) using the C++17 standard. This shim does not and will not support Windows due to lack of POSIX compliance.
+
 ## Setup
-- clone git repository
-- change to root project directory and run make
-- install shared objects into `~/mylibs`
+1) Clone git repository
+2) Change to root project directory and run make
+3) If not already done, install shared objects `libmcheck.so` and `libmcheckstorage.so` into `~/mylibs`
+4) Add the executable `mcheck` to your `$PATH` environment variable either by moving it to a location in your path or by appending to your path
+5) Run the leak checker on an executable via `mcheck <exe to check path>`
 
 ## Details
+**MCheck Options:**
+- `-v` option indicates to use verbose realtime logging
+
 **What this project will do:**
-- Determine memory leaks in a program indicating size, base address, and order
-- Show memory request timeline for the program lifetime
+- Determine memory leaks in a program indicating size, and base address
+- Show memory allocation timeline for the program
  
 **What this project will not do:**
  - Provide line numbers and code snippets for detected memory leaks
- - detect memory leaks in C programs / programs utilizing C style memory management functions or memory allocation system calls like mmap
+ - Detect memory leaks in C programs / programs utilizing C style memory management functions or memory allocation system calls like mmap or brk
+ 	- Leak checking for C style memory management may be added in a future update, but does not work at the moment
 
 **Comparison With Valgrind**
-- Valgrind uses JIT translation of the executable, instrumenting it on the fly
-	- This instrumentation allows Valgrind to use debug symbols providing code snippets and line numbers, as well as stack frame snapshots
-- The implementation in this project is far simpler and consequently far more light weight 
-- I implement a shim oveloading the new and delete operators provided by the standard library, then I force this shim to be linked first so that the overloads take effect
-	- The shim then makes calls to a second shared library to record the memory request, and on program completion this library dumps the recorded memory requests
+- Valgrind uses JIT translation of the executable, instrumenting the executable on the fly
+	- Instrumentation allows Valgrind to use debug symbols to provide code snippets and line numbers, as well as stack frame snapshots for any leaks found
+- This project implements a shim oveloading the new and delete operators provided by the standard library. There is no translation or instrumentation of the client executable resulting in a far smaller performance cost
 
 ## Future Improvements
--Allow for the data collector to persist the allocation timeline to a swap file should the time line begin to eat up too much memory
--Allow for additional options to be passed via posix message queue
+- Allow for the data collector to persist the allocation timeline to a swap file if the time line begins to hog memory as this may cause memory thrashing / constant state of paging
+- Allow for additional options to be passed via POSIX message queue
+- Shim C style memory mangement methods (malloc, calloc, realloc, free, etc)
+- Look into possible ways of tracking / overloading memory allocation system calls (mmap, brk, etc)
 
