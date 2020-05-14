@@ -4,6 +4,8 @@
 MCheck is a streamlined memory leak checker similar to Valgrind. This project leak checks an executable by intercepting library calls to new and delete implemented in libstdc++. The intercepted calls then use the contextual information to track heap memory consumption.
 This shim is built to run on Linux based operating systems only (tested on Ubuntu 18.0.4) using the C++17 standard. This shim does not and will not support Windows due to lack of POSIX compliance.
 
+![screenshot](img/mcheck.png "Leak check")
+
 ## Setup
 1) Clone git repository
 2) Change to root project directory and run make
