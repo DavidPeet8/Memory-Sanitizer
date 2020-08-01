@@ -5,3 +5,4 @@
 **/testPrograms
 *.so
 core
+*.sublime-workspace

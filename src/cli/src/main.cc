@@ -59,6 +59,7 @@ namespace CLI
 // Calling format: mcheck <mcheck args> executable_path <args to exe>
 int main (int argc, char **argv) 
 {
+	std::cerr << "Starting Up Mcheck..." << std::endl;
 	int argsComsumed = 0;
 	Common::Args args {CLI::parseArgs(argc, argv, argsComsumed)};
 	unsigned int size;
@@ -81,6 +82,7 @@ int main (int argc, char **argv)
 		case 0: // We are in the child process
 		{
 			std::string libPath = std::string(getenv("HOME")) + "/mylibs/libmcheck.so";
+			std::cerr << "Library Path: " << libPath << std::endl;
 			setenv("LD_PRELOAD", libPath.c_str(), 1);
 			execv(argv[argsComsumed + 1], argv + argsComsumed + 2);
 			break;
