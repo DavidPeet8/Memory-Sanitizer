@@ -4,12 +4,12 @@
 # MCheck
 MCheck is a lightweight memory sanitizer similar to Valgrind. MCheck records heap memory consumption of an executable without needing to recompile by intercepting library calls to new and delete implemented in libstdc++. 
 
+![screenshot](img/mcheck.png "Leak check")
+
 ## Compatibility
 1) Designed to run on Linux operating systems (tested on Ubuntu 18.0.4) using the C++17 standard
 2) Untested on MacOS, but may work properly due to POSIX compliance
 3) Does not support Windows, and will not run properly due to lack of POSIX compliance
-
-![screenshot](img/mcheck.png "Leak check")
 
 ## Setup
 1) Clone the git repository 
