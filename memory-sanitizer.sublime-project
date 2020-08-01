@@ -1,0 +1,23 @@
+{
+	"folders":
+	[
+		{
+			"path": "/home/david/Programming/Projects/Memory-Sanitizer",
+		}
+	],
+	"settings":
+	{
+		"tab-size": 4,
+		"SublimeLinter.linters.clang++.args": ["-std=c++17", "-Wall", "-Werror", "-fsyntax-only", "-fno-caret-diagnostics"],
+		"SublimeLinter.linters.clang++.lint_mode": "background",
+		"SublimeLinter.linters.clang++.working_dir": "$folder",
+		"SublimeLinter.linters.clang++.I": 
+		[
+			"${folder}/src/cli/src",
+			"${folder}/src/common/src",
+			"${folder}/src/mcheck/src",
+			"${folder}/src/mcheckstorage/src",
+			"${folder}/src/mcheckstorage/include"
+		]
+	},
+}
