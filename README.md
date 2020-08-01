@@ -1,39 +1,49 @@
 
 
+
 # MCheck
-MCheck is a streamlined memory leak checker similar to Valgrind. This project leak checks an executable by intercepting library calls to new and delete implemented in libstdc++. The intercepted calls then use the contextual information to track heap memory consumption.
-This shim is built to run on Linux based operating systems only (tested on Ubuntu 18.0.4) using the C++17 standard. This shim does not and will not support Windows due to lack of POSIX compliance.
+MCheck is a lightweight memory sanitizer similar to Valgrind. MCheck records heap memory consumption of an executable without needing to recompile by intercepting library calls to new and delete implemented in libstdc++. 
+
+## Compatibility
+1) Designed to run on Linux operating systems (tested on Ubuntu 18.0.4) using the C++17 standard
+2) Untested on MacOS, but may work properly due to POSIX compliance
+3) Does not support Windows, and will not run properly due to lack of POSIX compliance
 
 ![screenshot](img/mcheck.png "Leak check")
 
 ## Setup
-1) Clone git repository
-2) Change to root project directory and run make
-3) If not already done, install shared objects `libmcheck.so` and `libmcheckstorage.so` into `~/mylibs`
-4) Add the executable `mcheck` to your `$PATH` environment variable either by moving it to a location in your path or by appending to your path
-5) Run the leak checker on an executable via `mcheck <exe to check path>`
+1) Clone the git repository 
+```bash 
+git clone git@github.com:DavidPeet8/Memory-Sanitizer.git
+```
+2) Change working directory to project root directory and run make 
+```bash
+cd <project root> && make
+```
+3) Run the sanitizer on an executable via `mcheck <exe to check path>`
 
 ## Details
-**MCheck Options:**
+**MCheck Flags:**
 - `-v` option indicates to use verbose realtime logging
 
-**What this project will do:**
-- Determine memory leaks in a program indicating size, and base address
-- Show memory allocation timeline for the program
- 
-**What this project will not do:**
- - Provide line numbers and code snippets for detected memory leaks
- - Detect memory leaks in C programs / programs utilizing C style memory management functions or memory allocation system calls like mmap or brk
- 	- Leak checking for C style memory management may be added in a future update, but does not work at the moment
+**Capabilities & Limitations:**
+- Provides detailed information on the history of a processes memory consumption, including order, size, and base address of all allocations and deallocations
+- Due to lightweight implementation, line numbers and code snippets cannot be provided for detected memory leaks
+- Currently cannot detect leaks in C style memory management or any memory allocation system calls
 
-**Comparison With Valgrind**
-- Valgrind uses JIT translation of the executable, instrumenting the executable on the fly
-	- Instrumentation allows Valgrind to use debug symbols to provide code snippets and line numbers, as well as stack frame snapshots for any leaks found
-- This project implements a shim oveloading the new and delete operators provided by the standard library. There is no translation or instrumentation of the client executable resulting in a far smaller performance cost
+## Troubleshooting
+1) Check that the created shared objects `libmcheck.so` and `libmcheckstorage.so` have been installed into `~/mylibs`
+2) Check that  `mcheck` has been added to your **`$PATH`** environment variable
+3) If you are running mcheck in a context where DLL's must be installed at the system level (for example trying to profile with `perf`) run the following:
+```bash
+sudo mkdir /usr/lib/mcheck
+sudo cp ~/mylibs/* .
+sudo echo "/usr/lib/mcheck" >> /etc/ld.so.conf.d/.conf
+sudo ldconfig  
+```
 
 ## Future Improvements
 - Allow for the data collector to persist the allocation timeline to a swap file if the time line begins to hog memory as this may cause memory thrashing / constant state of paging
 - Allow for additional options to be passed via POSIX message queue
 - Shim C style memory mangement methods (malloc, calloc, realloc, free, etc)
 - Look into possible ways of tracking / overloading memory allocation system calls (mmap, brk, etc)
-

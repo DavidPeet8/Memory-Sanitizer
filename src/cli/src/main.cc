@@ -84,6 +84,7 @@ int main (int argc, char **argv)
 			std::string libPath = std::string(getenv("HOME")) + "/mylibs/libmcheck.so";
 			std::cerr << "Library Path: " << libPath << std::endl;
 			setenv("LD_PRELOAD", libPath.c_str(), 1);
+			setenv("DYLD_INSERT_LIBRARIES", libPath.c_str(), 1);
 			execv(argv[argsComsumed + 1], argv + argsComsumed + 2);
 			break;
 		}

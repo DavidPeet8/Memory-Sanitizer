@@ -18,6 +18,9 @@
 			"${folder}/src/mcheck/src",
 			"${folder}/src/mcheckstorage/src",
 			"${folder}/src/mcheckstorage/include"
-		]
+		],
+		"easy_clang_complete_verbose": true,
+		"ecc_use_libclang": true,
+		"gutter_style": "dot"
 	},
 }
