@@ -28,6 +28,7 @@ void LeakChecker::remRef(void * const baseAddr)
 	{
 		memRefs.erase(refIt);
 		allocationTimeline.emplace_back(MemRequest{baseAddr, std::nullopt, true});
+		return;
 	}
 	allocationTimeline.emplace_back(MemRequest{baseAddr, std::nullopt, false});
 }
@@ -46,11 +47,11 @@ void LeakChecker::dumpRefs () const
 	}
 
 	printf("\nMemory Allocation History:\n");
-	printf("%-14s | %-10s | %-7s\n", "Base Address", "Size", "Success");
+	printf("%-14s | %-10s | %-10s | %-7s\n", "Base Address", "Alloc?" ,"Size", "Success");
 	
 	for (const auto &memref : allocationTimeline) 
 	{
-		printf("%-14p | %-10lu | %-7s\n", memref.baseAddr, memref.size.value_or(0), memref.success ? "true" : "false");
+		printf("%-14p | %-10s | %-10lu | %-7s\n", memref.baseAddr, memref.size.has_value() ? "ALLOC" : "DEALLOC", memref.size.value_or(0), memref.success ? "true" : "false");
 	}
 }
 

@@ -2,7 +2,7 @@
 #define LEAKCHECKER_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <optional>
 
 struct MemRequest 
@@ -14,7 +14,7 @@ struct MemRequest
 
 class LeakChecker 
 {
-	std::map<void *, size_t> memRefs;
+	std::unordered_map<void *, size_t> memRefs;
 	std::vector<MemRequest> allocationTimeline;
 
 	public:
