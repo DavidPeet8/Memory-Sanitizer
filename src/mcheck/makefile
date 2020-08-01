@@ -28,7 +28,7 @@ INCLUDE_FLAGS=$(call addprefix, -I , $(INCLUDE_PATHS))
 
 ####################### TARGETS #########################
 
-${EXEC}: makeCommon compile link
+${EXEC}: makeObjDir makeCommon compile link
 
 -include ${DEPENDSPATHS}
 
@@ -40,8 +40,14 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 
 ######################## PHONY TARGETS #########################
 
+makeObjDir:
+	mkdir -p obj
+
 makeCommon:
 	cd ${COMMON_DIR} && $(MAKE) ${COMMON_TARGET} # Make the common objects before trying to do any sort of linking
+
+makeObjDir: 
+	mkdir -p obj
 
 debug: COMPILATION_FLAGS+=-g 
 debug: COMMON_TARGET=debug

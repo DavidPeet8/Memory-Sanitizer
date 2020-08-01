@@ -20,7 +20,7 @@ DEPENDSPATHS=${OBJECTPATHS:.o=.d}
 
 ####################### TARGETS #########################
 
-all: $(OBJECTPATHS)
+all: makeObjDir $(OBJECTPATHS)
 	@echo finished making ALL
 
 -include ${DEPENDSPATHS}
@@ -33,6 +33,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cc
 	${COMPILER} $< -std=${CPPSTANDARD} -c -o $@ ${COMPILATION_FLAGS}
 
 ######################## PHONY TARGETS #########################
+
+makeObjDir: 
+	mkdir -p obj
 
 debug: COMPILATION_FLAGS+=-g 
 debug: ${OBJECTPATHS}

@@ -12,7 +12,7 @@ BIN_DIR=~/bin
 
 ######################## PHONY TARGETS #########################
 
-all:
+all: makeBuildDir makeLibsDir
 	cd $(CLIDIR) && $(MAKE)
 	cp $(CLIDIR)/mcheck $(BUILD_DIR)
 	cp $(CLIDIR)/mcheck $(BIN_DIR)
@@ -58,3 +58,9 @@ clean:
 
 install:
 	cp $(BUILD_DIR)/*.so $(INSTALL_DIR)
+
+makeBuildDir:
+	mkdir -p build
+
+makeLibsDir:
+	mkdir -p ~/mylibs

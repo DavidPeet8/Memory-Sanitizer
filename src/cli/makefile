@@ -28,7 +28,7 @@ INCLUDE_FLAGS=$(call addprefix, -I , $(INCLUDE_PATHS))
 
 ####################### TARGETS #########################
 
-${EXEC}: makeCommon compile link
+${EXEC}: makeObjDir makeCommon compile link
 
 -include ${DEPENDSPATHS}
 
@@ -39,6 +39,9 @@ ${OBJDIR}/%.o: ${SRCDIR}/%.cc
 	${COMPILER} $< -std=${CPPSTANDARD} $(INCLUDE_FLAGS) -c -o $@ ${COMPILATION_FLAGS}
 
 ######################## PHONY TARGETS #########################
+
+makeObjDir:
+	mkdir -p obj
 
 makeCommon:
 	cd ${COMMON_DIR} && $(MAKE) ${COMMON_TARGET} # Make the common objects before trying to do any sort of linking
