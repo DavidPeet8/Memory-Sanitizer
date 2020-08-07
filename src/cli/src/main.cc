@@ -79,6 +79,7 @@ int main (int argc, char **argv)
 	{
 		case -1:
 			throw Common::ProcCreateException();
+			break;
 		case 0: // We are in the child process
 		{
 			std::string libPath = std::string(getenv("HOME")) + "/mylibs/libmcheck.so";

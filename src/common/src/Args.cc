@@ -23,9 +23,7 @@ namespace Common
 		delete msg;
 	}
 
-	Args::Args():
-	args{0}
-	{}
+	Args::Args(): args{0} {}
 
 	Args::Args(unsigned int args): args{args} {}
 }
